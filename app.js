@@ -4,19 +4,24 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Default substituents for Glucose
     let stereocenters = [
-        { left: 'CH3', right: 'OH' },  // C1
-        { left: 'CH₃CH₂', right: 'NH₂' }  // C4
+        { left: 'CH₃', right: 'OH' },  // C1
+        { left: 'OH', right: 'NH₂' }  // C4
     ];
+    
+    let numStereocenters = parseInt(document.getElementById('stereocenters').value);
 
     function updateInputFields(first = false) {
         const container = document.getElementById('substituents-inputs');
 
         container.innerHTML = ''; // Clear previous inputs
 
-        const numStereocenters = parseInt(document.getElementById('stereocenters').value);
+        numStereocenters = parseInt(document.getElementById('stereocenters').value);
+
+        const newsubsright = ['OH', 'H', 'Cl', 'Br'];
+        const newsubsleft = ['HO', 'H', 'H₃C', 'H₂N'];
 
         for (let i = 0; i < numStereocenters; i++) {
-            const sub = stereocenters[i] || { left: 'H', right: 'OH' }; // Default values for new stereocenters
+            const sub = stereocenters[i] || { left: newsubsleft[Math.floor(Math.random() * newsubsleft.length)], right: newsubsright[Math.floor(Math.random() * newsubsright.length)] }; // Default values for new stereocenters
             stereocenters[i] = sub; // Ensure it exists in stereocenters array
 
             const div = document.createElement('div');
@@ -31,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.innerHTML = `
                 <label>C${i + 1} Left:</label>
                 <input id="${uuidv4()}" class="sub" type="text" data-index="${i}" data-side="left" value="${sub.left}">
-                <label>C${i + 1} Right:</label>
+                <label>Right:</label>
                 <input id="${uuidv4()}" class="sub" type="text" data-index="${i}" data-side="right" value="${sub.right}">
             `;
 
@@ -50,12 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                 if (e.target.id == "top" || e.target.id == "bottom"){
-                
-                console.log(e.target.dataset.index);
-                } else {
-                    stereocenters[index][side] = e.target.value;
+
                     if (Number.isInteger(parseInt(e.data))) {
-                        console.log(e.target.id);
                         const position = e.target.selectionStart - 1; // Subtract 1 to get the position of the last character added
             
                         const subscripts = ["\u2080", "\u2081", "\u2082", "\u2083", "\u2084", "\u2085", "\u2086", "\u2087", "\u2088", "\u2089"];
@@ -64,42 +65,66 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         document.getElementById(e.target.id).value = newStr; 
 
-                        console.log(e.target.dataset.side);
+                        //stereocenters[e.target.dataset.index][e.target.dataset.side] = newStr;
+
+                        
+                    }
+
+
+                
+                } else {
+                    stereocenters[index][side] = e.target.value;
+                    if (Number.isInteger(parseInt(e.data))) {
+                        const position = e.target.selectionStart - 1; // Subtract 1 to get the position of the last character added
+            
+                        const subscripts = ["\u2080", "\u2081", "\u2082", "\u2083", "\u2084", "\u2085", "\u2086", "\u2087", "\u2088", "\u2089"];
+                        let str = document.getElementById(e.target.id).value;
+                        let newStr = str.substring(0, position) + subscripts[e.data] + str.substring(position + 1);
+                        
+                        document.getElementById(e.target.id).value = newStr; 
+
                         stereocenters[e.target.dataset.index][e.target.dataset.side] = newStr;
 
-                        console.log(stereocenters);
                         
                     }
                 }
                 //updateInputFields();
                 drawFischerProjection(); // Redraw after updating substituents
+                drawZigzag(stereocenters);
             });
         });
     }
 
     function drawFischerProjection() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const numStereocenters = parseInt(document.getElementById('stereocenters').value);
+        ctx.lineWidth = 2;
+        numStereocenters = parseInt(document.getElementById('stereocenters').value);
         const centerX = canvas.width / 2;
-        const centerY = 100;
-        const bondLength = 80;
+        const centerY = 120;
+        const bondLength = 60;
         const bondOffset = 60;
 
       //const sub = stereocenters[i % stereocenters.length];
         // Draw CHO at the top (above C1)
         
+        console.log(bondLength);
+        
         ctx.font = "20px Arial";
-        ctx.textAlign = 'left'; ctx.textBaseline = 'bot';
-        ctx.fillText(document.getElementById('top').value, centerX, centerY - bondLength);
+        ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+        ctx.fillText(document.getElementById('top').value, centerX-7, centerY-bondLength);
         ctx.beginPath();
         ctx.moveTo(centerX, centerY - bondLength);
         ctx.lineTo(centerX, centerY); // Bond connecting CHO to C1
         ctx.stroke();
+        console.log(numStereocenters);
 
         // Draw stereocenters and substituents
         for (let i = 0; i < numStereocenters; i++) {
-            const sub = stereocenters[i % stereocenters.length];
+            const sub = stereocenters[i];
+            console.log(i);
+            console.log(stereocenters);
+            console.log(sub);
+            console.log(stereocenters[i]);
             const y = centerY + i * bondLength;
             
             // Draw the vertical carbon backbone
@@ -110,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Draw horizontal bonds and substituents
             
-            console.log(sub);
+            //console.log(sub);
 
             // Left substituent
             ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
@@ -118,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.beginPath();
             ctx.moveTo(centerX, y);
             ctx.lineTo(centerX - bondOffset, y);
-            ctx.stroke();
+            ctx.stroke();4
 
             // Right substituent
             ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
@@ -132,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Draw CH2OH at the bottom (below the last stereocenter)
         const lastY = centerY + (numStereocenters - 1) * bondLength;
         ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-        ctx.fillText('CH₂OH', centerX, lastY + bondLength);
+        ctx.fillText('CH₂OH', centerX-7, lastY + bondLength);
         ctx.beginPath();
         ctx.moveTo(centerX, lastY);
         ctx.lineTo(centerX, lastY + bondLength); // Bond connecting last stereocenter to CH2OH
@@ -140,37 +165,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
 
-    /*
-    const inputFields = document.querySelectorAll('input[type="text"]');
-    inputFields.forEach(input => {
-        input.addEventListener('input', (e) => {
-        if (Number.isInteger(parseInt(e.data))) {
-            const position = e.target.selectionStart - 1; // Subtract 1 to get the position of the last character added
-
-            const subscripts = ["\u2080", "\u2081", "\u2082", "\u2083", "\u2084", "\u2085", "\u2086", "\u2087", "\u2088", "\u2089"];
-            let str = document.getElementById(e.target.id).value;
-            let newStr = str.substring(0, position) + subscripts[e.data] + str.substring(position + 1);
-            
-            document.getElementById(e.target.id).value = newStr; 
-        
-        }
-        
-        //drawProjection();
-        //drawSawhorseProjection(carbon1, carbon2);
-
-        });
-    });
-    */
-
     
-        function drawZigzag(substituents) {
+    function drawZigzag(substituents) {
+        
         const canvas = document.getElementById('zigzagCanvas');
         const ctx = canvas.getContext('2d');
         
-        const startX = 50;
-        const startY = 200;
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        
+        const startX = 75;
+        const startY = 150;
         const bondLength = 60;
-        const numCarbons = substituents.length; // Number of carbons (matches stereocenters)
+        let suboffset = 7;
+        numStereocenters = parseInt(document.getElementById('stereocenters').value);
+        //const numCarbons = substituents.length; // Number of carbons (matches stereocenters)
 
         // Clear canvas before drawing
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -181,10 +190,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         ctx.font = "20px Arial";
         //ctx.textAlign = "center";
+        function reverseString(str) {
+            var splitString = str.split(""); // var splitString = "hello".split("");
+            var reverseArray = splitString.reverse(); // var reverseArray = ["h", "e", "l", "l", "o"].reverse();
+            var joinArray = reverseArray.join(""); // var joinArray = ["o", "l", "l", "e", "h"].join("");
+            return joinArray; // "olleh"
+        }
 
-
-        ctx.textAlign = 'right'; ctx.textBaseline = 'top';
-        ctx.fillText(document.getElementById('top').value,startX,startY);
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText(reverseString(document.getElementById('top').value),startX-suboffset,startY);
         //ctx.fillText(substituents[i].left, nextX - suboffset - bondLength*Math.cos(2*Math.PI/6), nextY - suboffset - bondLength*Math.sin(2*Math.PI/6)); 
 
 
@@ -195,11 +209,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let x = startX;
         let y = startY;
-        let suboffset = 10;
+
         // Loop through carbons to draw zigzag
-        for (let i = 0; i < numCarbons+1; i++) {
+        for (let i = 0; i < numStereocenters+1; i++) {
             let nextX = x + bondLength;
-            let nextY = y + (i % 2 === 0 ? -bondLength : bondLength);
+            let nextY = y + i+15 +(i % 2 === 0 ? -bondLength+30 : bondLength-30);
 
             // Draw CC bond line
             ctx.beginPath();
@@ -209,6 +223,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.stroke();
             ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
             //ctx.fillText(substituents[i].left, nextX - suboffset - bondLength*Math.cos(2*Math.PI/6), nextY - suboffset - bondLength*Math.sin(2*Math.PI/6)); 
+            const anglef1 = 36/11;
+            const anglef2 = 36/7;
+            //const anglef1 = 3;
+            //const anglef2 = 6;
+
 
 
             //drawWedgeBond(x, y, bondLength, false); 
@@ -220,9 +239,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Draw sub bond line 1
             function isOdd(num){return num % 2;}
 
-            if (i < numCarbons){
+            if (i < numStereocenters){
                 
-                console.log(i);
+                //console.log(i);
                 if (!isOdd(i)) { //down facing wedges
                     ctx.beginPath();
                     ctx.textAlign = 'right';
@@ -230,25 +249,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     ctx.moveTo(nextX, nextY);
                     
-                    let subX = nextX - bondLength*Math.cos(2*Math.PI/6-widthfact);
-                    let subY = nextY - bondLength*Math.sin(2*Math.PI/6-widthfact);
-                    tsubX = nextX - bondLength*Math.cos(2*Math.PI/6 + widthfact);
-                    tsubY = nextY - bondLength*Math.sin(2*Math.PI/6 + widthfact);
+                    let subX = nextX - bondLength*Math.cos(2*Math.PI/anglef2-widthfact);
+                    let subY = nextY - bondLength*Math.sin(2*Math.PI/anglef2-widthfact);
+                    tsubX = nextX - bondLength*Math.cos(2*Math.PI/anglef2 + widthfact);
+                    tsubY = nextY - bondLength*Math.sin(2*Math.PI/anglef2 + widthfact);
                     ctx.lineTo(subX, subY);
                     ctx.lineTo(tsubX, tsubY);
                     ctx.closePath();
                     ctx.fill();
-                    ctx.fillText(substituents[i].left, nextX - suboffset - bondLength*Math.cos(2*Math.PI/6), nextY - suboffset - bondLength*Math.sin(2*Math.PI/6)); 
+                    ctx.fillText(substituents[i].left, nextX + suboffset - bondLength*Math.cos(2*Math.PI/anglef2), nextY - 2*suboffset - bondLength*Math.sin(2*Math.PI/anglef2)); 
 
 
                     ctx.beginPath();
                     ctx.moveTo(nextX, nextY);
-                    console.log(Math.cos(2*Math.PI/9));
-                    console.log(Math.sin(2*Math.PI/9));
-                    subX = nextX - bondLength*Math.cos(2*Math.PI/3-widthfact);
-                    subY = nextY - bondLength*Math.sin(2*Math.PI/3-widthfact);
-                    tsubX = nextX - bondLength*Math.cos(2*Math.PI/3 + widthfact);
-                    tsubY = nextY - bondLength*Math.sin(2*Math.PI/3 + widthfact);
+                    //console.log(Math.cos(2*Math.PI/9));
+                    //console.log(Math.sin(2*Math.PI/9));
+                    subX = nextX - bondLength*Math.cos(2*Math.PI/anglef1-widthfact);
+                    subY = nextY - bondLength*Math.sin(2*Math.PI/anglef1-widthfact);
+                    tsubX = nextX - bondLength*Math.cos(2*Math.PI/anglef1 + widthfact);
+                    tsubY = nextY - bondLength*Math.sin(2*Math.PI/anglef1 + widthfact);
                     
                    
 
@@ -261,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.stroke();
 
                     ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-                    ctx.fillText(substituents[i].right, nextX + suboffset - bondLength*Math.cos(2*Math.PI/3), nextY - suboffset - bondLength*Math.sin(2*Math.PI/3)); 
+                    ctx.fillText(substituents[i].right, nextX - suboffset - bondLength*Math.cos(2*Math.PI/anglef1), nextY - 2*suboffset - bondLength*Math.sin(2*Math.PI/anglef1)); 
 
 
                 } else {
@@ -270,12 +289,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     
                     ctx.moveTo(nextX, nextY);
-                    console.log(Math.cos(2*Math.PI*3/8));
-                    console.log(Math.sin(2*Math.PI*3/8));
-                    subX = nextX + bondLength*Math.cos(2*Math.PI/6-widthfact);
-                    subY = nextY + bondLength*Math.sin(2*Math.PI/6)-widthfact;
-                    tsubX = nextX + bondLength*Math.cos(2*Math.PI/6 + widthfact);
-                    tsubY = nextY + bondLength*Math.sin(2*Math.PI/6 + widthfact);
+                    //console.log(Math.cos(2*Math.PI*3/8));
+                    //console.log(Math.sin(2*Math.PI*3/8));
+                    subX = nextX + bondLength*Math.cos(2*Math.PI/anglef2-widthfact);
+                    subY = nextY + bondLength*Math.sin(2*Math.PI/anglef2-widthfact);
+                    tsubX = nextX + bondLength*Math.cos(2*Math.PI/anglef2 + widthfact);
+                    tsubY = nextY + bondLength*Math.sin(2*Math.PI/anglef2 + widthfact);
 
                     ctx.lineTo(subX, subY);
                     ctx.lineTo(tsubX, tsubY);
@@ -286,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.stroke();
                     //ctx.fill();
                     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-                    ctx.fillText(substituents[i].right, nextX - suboffset - bondLength*Math.cos(2*Math.PI/6), nextY + suboffset + bondLength*Math.sin(2*Math.PI/6)); 
+                    ctx.fillText(substituents[i].right, nextX + suboffset - bondLength*Math.cos(2*Math.PI/anglef2), nextY + 2*suboffset + bondLength*Math.sin(2*Math.PI/anglef2)); 
 
 
 
@@ -294,12 +313,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     ctx.beginPath();
                     ctx.moveTo(nextX, nextY);
-                    console.log(Math.cos(2*Math.PI/9));
-                    console.log(Math.sin(2*Math.PI/9));
-                    subX = nextX + bondLength*Math.cos(2*Math.PI/3-widthfact);
-                    subY = nextY + bondLength*Math.sin(2*Math.PI/3-widthfact);
-                    tsubX = nextX + bondLength*Math.cos(2*Math.PI/3 + widthfact);
-                    tsubY = nextY + bondLength*Math.sin(2*Math.PI/3 + widthfact);
+                    //console.log(Math.cos(2*Math.PI/9));
+                    //console.log(Math.sin(2*Math.PI/9));
+                    subX = nextX + bondLength*Math.cos(2*Math.PI/anglef1-widthfact);
+                    subY = nextY + bondLength*Math.sin(2*Math.PI/anglef1-widthfact);
+                    tsubX = nextX + bondLength*Math.cos(2*Math.PI/anglef1 + widthfact);
+                    tsubY = nextY + bondLength*Math.sin(2*Math.PI/anglef1 + widthfact);
                     ctx.lineTo(tsubX, tsubY);
                     ctx.lineTo(subX, subY);
                     //ctx.fill();
@@ -309,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.fill();
                 
                     ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-                    ctx.fillText(substituents[i].left, nextX + suboffset - bondLength*Math.cos(2*Math.PI/3), nextY + suboffset + bondLength*Math.sin(2*Math.PI/3)); 
+                    ctx.fillText(substituents[i].left, nextX + suboffset - bondLength*Math.cos(2*Math.PI/anglef1), nextY + suboffset + bondLength*Math.sin(2*Math.PI/anglef1)); 
 
                 }
 
@@ -332,8 +351,17 @@ document.addEventListener('DOMContentLoaded', () => {
             x = nextX;
             y = nextY;
         }
-        ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-        ctx.fillText(document.getElementById('bottom').value,x,y);
+        
+        
+        
+        if (isOdd(numStereocenters)) {
+        console.log("odd");
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        } else {
+        console.log("even");
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        }
+        ctx.fillText(document.getElementById('bottom').value,x+suboffset,y);
 
     }
     
@@ -341,9 +369,22 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     // Update Fischer projection and inputs when the number of stereocenters changes
-    document.getElementById('stereocenters').addEventListener('input', () => {
+    document.getElementById('stereocenters').addEventListener('input', (e) => {
+        
+        
+        if (e.target.value > numStereocenters) {
+
+
+        } else if (e.target.value < numStereocenters) {
+        	 const numStereocenters = parseInt(document.getElementById('stereocenters').value);
+        	 delete stereocenters[numStereocenters];
+        
+        }
+
+        
         updateInputFields();
         drawFischerProjection();
+        drawZigzag(stereocenters);
     });
 
 

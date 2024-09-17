@@ -10,7 +10,7 @@ input.sub {
 }
 
 .groups{
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 #substituents-input {
@@ -23,14 +23,14 @@ input.sub {
 
 }
 .column {
-    width: 45%;
+    width: 30%;
     text-align: center;
-    border: 1px;
-
+    flex: 1 1 300px;
 }
 
 .container {
     display: flex;
     margin: auto;
-
+    flex-wrap: wrap;
+    flex-flow: row wrap;
 }

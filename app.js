@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+//document.addEventListener('DOMContentLoaded', () => {
+ 
     const canvas = document.getElementById('fischerCanvas');
     const ctx = canvas.getContext('2d');
     
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             div.innerHTML = `
                 <label>C${i + 1} Left:</label>
-                <input id="${uuidv4()}" class="sub" type="text" data-index="${i}" data-side="left" value="${sub.left}">
+                <input id="${uuidv4()}" width="5" type="text" data-index="${i}" data-side="left" value="${sub.left}">
                 <label>Right:</label>
                 <input id="${uuidv4()}" class="sub" type="text" data-index="${i}" data-side="right" value="${sub.right}">
             `;
@@ -54,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const side = e.target.getAttribute('data-side');
 
 
-                if (e.target.id == "top" || e.target.id == "bottom"){
+                if (e.target.id == "topc" || e.target.id == "bottom"){
 
                     if (Number.isInteger(parseInt(e.data))) {
                         const position = e.target.selectionStart - 1; // Subtract 1 to get the position of the last character added
@@ -99,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.lineWidth = 2;
         numStereocenters = parseInt(document.getElementById('stereocenters').value);
+        
         const centerX = canvas.width / 2;
         const centerY = 120;
         const bondLength = 60;
@@ -111,7 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         ctx.font = "20px Arial";
         ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-        ctx.fillText(document.getElementById('top').value, centerX-7, centerY-bondLength);
+        
+        ctx.fillText(document.getElementById('topc').value, centerX-7, centerY-bondLength);
         ctx.beginPath();
         ctx.moveTo(centerX, centerY - bondLength);
         ctx.lineTo(centerX, centerY); // Bond connecting CHO to C1
@@ -164,7 +167,15 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.stroke();
     }
     
+    function reverseString(str) {
+        console.log(str);
 
+        var splitString = str.split(""); // var splitString = "hello".split("");
+        var reverseArray = splitString.reverse(); // var reverseArray = ["h", "e", "l", "l", "o"].reverse();
+        var joinArray = reverseArray.join(""); // var joinArray = ["o", "l", "l", "e", "h"].join("");
+        return joinArray; // "olleh"
+    
+    }
     
     function drawZigzag(substituents) {
         
@@ -190,15 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         ctx.font = "20px Arial";
         //ctx.textAlign = "center";
-        function reverseString(str) {
-            var splitString = str.split(""); // var splitString = "hello".split("");
-            var reverseArray = splitString.reverse(); // var reverseArray = ["h", "e", "l", "l", "o"].reverse();
-            var joinArray = reverseArray.join(""); // var joinArray = ["o", "l", "l", "e", "h"].join("");
-            return joinArray; // "olleh"
-        }
+
 
         ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-        ctx.fillText(reverseString(document.getElementById('top').value),startX-suboffset,startY);
+        console.log(document.getElementById('topc').value);
+        console.log(document.getElementById('bottom').value);
+
+        ctx.fillText(reverseString(document.getElementById('topc').value), startX-suboffset, startY);
         //ctx.fillText(substituents[i].left, nextX - suboffset - bondLength*Math.cos(2*Math.PI/6), nextY - suboffset - bondLength*Math.sin(2*Math.PI/6)); 
 
 
@@ -403,5 +412,5 @@ document.addEventListener('DOMContentLoaded', () => {
     drawZigzag(stereocenters);
     
     
-});
+//});
 

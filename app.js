@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Default substituents for Glucose
     let stereocenters = [
         { left: 'CH3', right: 'OH' },  // C1
-        { left: 'CH3CH2', right: 'NH2' }  // C4
+        { left: 'CH₃CH₂', right: 'NH₂' }  // C4
     ];
 
     function updateInputFields(first = false) {
@@ -30,40 +30,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
             div.innerHTML = `
                 <label>C${i + 1} Left:</label>
-                <input id="${uuidv4()}" type="text" data-index="${i}" data-side="left" value="${sub.left}">
+                <input id="${uuidv4()}" class="sub" type="text" data-index="${i}" data-side="left" value="${sub.left}">
                 <label>C${i + 1} Right:</label>
-                <input id="${uuidv4()}" type="text" data-index="${i}" data-side="right" value="${sub.right}">
+                <input id="${uuidv4()}" class="sub" type="text" data-index="${i}" data-side="right" value="${sub.right}">
             `;
 
             container.appendChild(div);
         }
 
         // Add event listeners for new input fields
-        const inputs = container.querySelectorAll('input');
+        const inputs = document.querySelectorAll('.sub');
+        //const inputs = document.getElementsByClassName('sub')
+
+
         inputs.forEach(input => {
             input.addEventListener('input', (e) => {
                 const index = parseInt(e.target.getAttribute('data-index'));
                 const side = e.target.getAttribute('data-side');
-                stereocenters[index][side] = e.target.value;
-                console.log(e.target.dataset.index);
 
+
+                if (e.target.id == "top" || e.target.id == "bottom"){
                 
+                console.log(e.target.dataset.index);
+                } else {
+                    stereocenters[index][side] = e.target.value;
+                    if (Number.isInteger(parseInt(e.data))) {
+                        console.log(e.target.id);
+                        const position = e.target.selectionStart - 1; // Subtract 1 to get the position of the last character added
+            
+                        const subscripts = ["\u2080", "\u2081", "\u2082", "\u2083", "\u2084", "\u2085", "\u2086", "\u2087", "\u2088", "\u2089"];
+                        let str = document.getElementById(e.target.id).value;
+                        let newStr = str.substring(0, position) + subscripts[e.data] + str.substring(position + 1);
+                        
+                        document.getElementById(e.target.id).value = newStr; 
 
-                if (Number.isInteger(parseInt(e.data))) {
-                    console.log(e);
-                    const position = e.target.selectionStart - 1; // Subtract 1 to get the position of the last character added
-        
-                    const subscripts = ["\u2080", "\u2081", "\u2082", "\u2083", "\u2084", "\u2085", "\u2086", "\u2087", "\u2088", "\u2089"];
-                    let str = document.getElementById(e.target.id).value;
-                    let newStr = str.substring(0, position) + subscripts[e.data] + str.substring(position + 1);
-                    
-                    document.getElementById(e.target.id).value = newStr; 
+                        console.log(e.target.dataset.side);
+                        stereocenters[e.target.dataset.index][e.target.dataset.side] = newStr;
 
-                    console.log(e.target.dataset.side);
-                    stereocenters[e.target.dataset.index][e.target.dataset.side] = newStr;
-
-                    console.log(stereocenters);
-                    
+                        console.log(stereocenters);
+                        
+                    }
                 }
                 //updateInputFields();
                 drawFischerProjection(); // Redraw after updating substituents
@@ -80,9 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const bondLength = 80;
         const bondOffset = 60;
 
+      //const sub = stereocenters[i % stereocenters.length];
         // Draw CHO at the top (above C1)
+        
         ctx.font = "20px Arial";
-        ctx.fillText('CHO', centerX, centerY - bondLength);
+        ctx.textAlign = 'left'; ctx.textBaseline = 'bot';
+        ctx.fillText(document.getElementById('top').value, centerX, centerY - bondLength);
         ctx.beginPath();
         ctx.moveTo(centerX, centerY - bondLength);
         ctx.lineTo(centerX, centerY); // Bond connecting CHO to C1
@@ -90,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Draw stereocenters and substituents
         for (let i = 0; i < numStereocenters; i++) {
+            const sub = stereocenters[i % stereocenters.length];
             const y = centerY + i * bondLength;
             
             // Draw the vertical carbon backbone
@@ -99,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.stroke();
 
             // Draw horizontal bonds and substituents
-            const sub = stereocenters[i % stereocenters.length];
+            
             console.log(sub);
 
             // Left substituent

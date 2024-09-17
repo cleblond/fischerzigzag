@@ -10,15 +10,22 @@
 
     <div class="container">
         <div class="column">
+            <div class="groups">
+
+                <h3>Substituents</h3>
                 <label for="stereocenters">Number of Stereocenters:</label>
-                <input type="number" id="stereocenters" value="2" min="1" max="5"><br>
+                <input type="number" id="stereocenters" value="2" min="1" max="5"><br><br>
+                
 
-                <label for="top">Top: </label>
-                <input class="sub" type="text" id="top" value="CHO" />
+                <label style="margin-left: 20px;" for="top">Top:</label>
+                <input class="sub" type="text" id="top" value="CHO" /><br><br>
 
-                <label for="bottom">Bottom: </label>
+                <label for="bottom">Bottom:   </label>
                 <input class="sub" type="text" id="bottom" value = "CH₂OH"/>
-            <div id="substituents-inputs"></div>
+                <br><br>
+
+                <div id="substituents-inputs"></div>
+            </div>
         </div>
         <div class="column">
             <canvas id="fischerCanvas" width="300" height="500"></canvas><br>

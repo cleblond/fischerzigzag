@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         
         const startX = 75;
-        const startY = 150;
+        const startY = 125;
         const bondLength = 60;
         let suboffset = 7;
         numStereocenters = parseInt(document.getElementById('stereocenters').value);

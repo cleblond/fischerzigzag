@@ -6,7 +6,7 @@
     // Default substituents for Glucose
     let stereocenters = [
         { left: 'CH₃', right: 'OH' },  // C1
-        { left: 'OH', right: 'NH₂' }  // C4
+        { left: 'HO', right: 'NH₂' }  // C4
     ];
     
     let numStereocenters = parseInt(document.getElementById('stereocenters').value);
@@ -103,8 +103,8 @@
         
         const centerX = canvas.width / 2;
         const centerY = 120;
-        const bondLength = 50;
-        const bondOffset = 50;
+        const bondLength = 40;
+        const bondOffset = 40;
 
       //const sub = stereocenters[i % stereocenters.length];
         // Draw CHO at the top (above C1)

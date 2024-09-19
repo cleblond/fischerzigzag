@@ -36,7 +36,7 @@
 
             div.innerHTML = `
                 <label>C${i + 1} Left:</label>
-                <input id="${uuidv4()}" width="5" type="text" data-index="${i}" data-side="left" value="${sub.left}">
+                <input id="${uuidv4()}" class="sub" type="text" data-index="${i}" data-side="left" value="${sub.left}">
                 <label>Right:</label>
                 <input id="${uuidv4()}" class="sub" type="text" data-index="${i}" data-side="right" value="${sub.right}">
             `;
@@ -103,8 +103,8 @@
         
         const centerX = canvas.width / 2;
         const centerY = 120;
-        const bondLength = 60;
-        const bondOffset = 60;
+        const bondLength = 50;
+        const bondOffset = 50;
 
       //const sub = stereocenters[i % stereocenters.length];
         // Draw CHO at the top (above C1)
@@ -187,7 +187,7 @@
         
         const startX = 75;
         const startY = 125;
-        const bondLength = 60;
+        const bondLength = 50;
         let suboffset = 7;
         numStereocenters = parseInt(document.getElementById('stereocenters').value);
         //const numCarbons = substituents.length; // Number of carbons (matches stereocenters)
@@ -204,8 +204,8 @@
 
 
         ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-        console.log(document.getElementById('topc').value);
-        console.log(document.getElementById('bottom').value);
+        //console.log(document.getElementById('topc').value);
+        //console.log(document.getElementById('bottom').value);
 
         ctx.fillText(reverseString(document.getElementById('topc').value), startX-suboffset, startY);
         //ctx.fillText(substituents[i].left, nextX - suboffset - bondLength*Math.cos(2*Math.PI/6), nextY - suboffset - bondLength*Math.sin(2*Math.PI/6)); 
@@ -370,7 +370,7 @@
         console.log("even");
         ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
         }
-        ctx.fillText(document.getElementById('bottom').value,x+suboffset,y);
+        ctx.fillText(document.getElementById('bottomc').value,x+suboffset,y);
 
     }
     

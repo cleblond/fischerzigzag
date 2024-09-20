@@ -304,7 +304,7 @@
                     subY = nextY + bondLength*Math.sin(2*Math.PI/anglef2-widthfact);
                     tsubX = nextX + bondLength*Math.cos(2*Math.PI/anglef2 + widthfact);
                     tsubY = nextY + bondLength*Math.sin(2*Math.PI/anglef2 + widthfact);
-
+                        
                     ctx.lineTo(subX, subY);
                     ctx.lineTo(tsubX, tsubY);
                     ctx.setLineDash([5, 5]);
@@ -328,8 +328,9 @@
                     subY = nextY + bondLength*Math.sin(2*Math.PI/anglef1-widthfact);
                     tsubX = nextX + bondLength*Math.cos(2*Math.PI/anglef1 + widthfact);
                     tsubY = nextY + bondLength*Math.sin(2*Math.PI/anglef1 + widthfact);
-                    ctx.lineTo(tsubX, tsubY);
+
                     ctx.lineTo(subX, subY);
+                    ctx.lineTo(tsubX, tsubY);
                     //ctx.fill();
                     //ctx.setLineDash([5, 5]);
                     ctx.closePath();

@@ -489,7 +489,10 @@
                     ctx.lineTo(subX, subY);
                     ctx.lineTo(tsubX, tsubY);
                     ctx.closePath();
-                    ctx.fill();
+                    ctx.setLineDash([5, 5]);
+                    ctx.stroke();
+                    //ctx.fill();
+                    
                     //ctx.fillText(substituents[i].left, nextX + suboffset - bondLength*Math.cos(2*Math.PI/anglef2), nextY - 2*suboffset - bondLength*Math.sin(2*Math.PI/anglef2)); 
                     ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
                     console.log(i);
@@ -502,7 +505,7 @@
                     }
 
 
-                    ctx.fillText(substituents[i].left, nextX + bondLength*Math.cos((angletest+angletest2+2*widthfact)/2), nextY + bondLength*Math.sin((angletest+angletest2+2*widthfact)/2)); 
+                    ctx.fillText(substituents[i].right, nextX + 5 + bondLength*Math.cos((angletest+angletest2+2*widthfact)/2), nextY - 5 + bondLength*Math.sin((angletest+angletest2+2*widthfact)/2)); 
 
 
                     ctx.beginPath();
@@ -517,11 +520,11 @@
 
                     ctx.lineTo(subX, subY);
                     ctx.lineTo(tsubX, tsubY);
-                    ctx.setLineDash([5, 5]);
+                    //ctx.setLineDash([5, 5]);
                     ctx.closePath();
                     //ctx.closePath();
-                    //ctx.fill();
-                    ctx.stroke();
+                    ctx.fill();
+                    //ctx.stroke();
 
                     //ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
                     if (i > 2) {
@@ -534,7 +537,7 @@
 
                     //ang = angletest-widthfact + angletest2-widthfact = 
                     //ctx.fillText(substituents[i].right, (subX+tsubX)/2+fudge, (subY+tsubY)/2+fudge);
-                    ctx.fillText(substituents[i].right, nextX + bondLength*Math.cos((angletest+angletest2-2*widthfact)/2), nextY + bondLength*Math.sin((angletest+angletest2-2*widthfact)/2));
+                    ctx.fillText(substituents[i].left, nextX + bondLength*Math.cos((angletest+angletest2-2*widthfact)/2), nextY + bondLength*Math.sin((angletest+angletest2-2*widthfact)/2));
 
 
                 // Add substituents
@@ -551,15 +554,6 @@
                 y = nextY;
             }
         
-        
-        
-            //if (isOdd(numStereocenters)) {
-            //console.log("odd");
-            ///ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-            //} else {
-            //console.log("even");
-            //ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-            //}
 
 
         }

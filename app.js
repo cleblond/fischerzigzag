@@ -109,6 +109,7 @@
                 //updateInputFields();
                 drawFischerProjection(); // Redraw after updating substituents
                 drawZigzag(stereocenters);
+                drawSideView(stereocenters);
             });
         });
     }

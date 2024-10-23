@@ -72,8 +72,9 @@
                 const side = e.target.getAttribute('data-side');
 
 
-                if (e.target.id == "topc" || e.target.id == "bottom"){
+                if (e.target.id == "topc" || e.target.id == "bottomc"){
 
+                    //console.log("HERE");
                     if (Number.isInteger(parseInt(e.data))) {
                         const position = e.target.selectionStart - 1; // Subtract 1 to get the position of the last character added
             
@@ -178,7 +179,7 @@
         // Draw CH2OH at the bottom (below the last stereocenter)
         const lastY = centerY + (numStereocenters - 1) * bondLength;
         ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-        ctx.fillText('CH₂OH', centerX-7, lastY + bondLength);
+        ctx.fillText(document.getElementById('bottomc').value, centerX-7, lastY + bondLength);
         ctx.beginPath();
         ctx.moveTo(centerX, lastY);
         ctx.lineTo(centerX, lastY + bondLength); // Bond connecting last stereocenter to CH2OH
@@ -495,7 +496,7 @@
                     
                     //ctx.fillText(substituents[i].left, nextX + suboffset - bondLength*Math.cos(2*Math.PI/anglef2), nextY - 2*suboffset - bondLength*Math.sin(2*Math.PI/anglef2)); 
                     ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-                    console.log(i);
+                    //console.log(i);
                     if (i > 1) {
                         fudge = 10;
                         ctx.textAlign = 'left'; ctx.textBaseline = 'top';
@@ -564,7 +565,7 @@
         x = x + bondLength*Math.cos(numStereocenters*Math.PI/5);
         y = y + bondLength*Math.sin(numStereocenters*Math.PI/5);
         
-        console.log(i);
+        //console.log(i);
 
         if (i > 3) {
             ctx.textAlign = 'right'; ctx.textBaseline = 'top';
